@@ -3,13 +3,10 @@ import mongoose from "mongoose"
 const userSchema = mongoose.Schema({
     email:{
         type:String,
-        default:""
+        default:"",
+        unique
     },
     password:{
-        type:String,
-        default:""
-    },
-    idGithub:{
         type:String,
         default:""
     },

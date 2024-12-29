@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createHash } from "../utils/hashingUtils";
+import passport from "passport";
 
 const router= Router()
 
@@ -7,20 +8,17 @@ router.get('/',(req,res)=>{
  res.send('hola')
 })
 
-router.post('/',async(req,res)=>{
+router.post('/',passport.authenticate('register',{session:false,failureRedirect:'/api/user/failRegister'}),async(req,res)=>{
     try {
-        const user={
-            email:req.body.email,
-            firstName:req.body.firstName,
-            lastName:req.body.lastName,
-            age:req.body.age,
-            password:createHash(req.body.password),
-        }
-        await userModel.create(user)
-        res.status(200).send('usuario creado')
+
+        if(!req.user) return res.status(400).json({message:"Registration failed"})
+        const token = generateToken(req.user)
+        res.cookie('coderPracticaIntegrado',token,{httpOnly:true}).json({message:'user registed'})
+
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).json(error)
     }
+    
 })
 
 export default router
