@@ -1,12 +1,9 @@
 import { Router } from "express";
-import { createHash } from "../utils/hashingUtils";
 import passport from "passport";
+import { authorization } from "../middlewares/authorization.js";
+import {generateToken} from "../utils/generateToken.js"
 
 const router= Router()
-
-router.get('/',(req,res)=>{
- res.send('hola')
-})
 
 router.post('/',passport.authenticate('register',{session:false,failureRedirect:'/api/user/failRegister'}),async(req,res)=>{
     try {
@@ -19,6 +16,20 @@ router.post('/',passport.authenticate('register',{session:false,failureRedirect:
         res.status(400).json(error)
     }
     
+})
+
+router.get('/current',passport.authenticate('jwt',{session:false}),authorization("admin"),(req,res)=>{
+    
+    const payload = {
+        firstName:req.user.firstName,
+        lastName:req.user.lastName
+    }
+ 
+    res.status(200).send(payload)
+})
+
+router.get('/logout', (req,res)=>{
+    res.clearCookie('cookieJWTEntrega').json({message:'sesión cerrada'})
 })
 
 export default router

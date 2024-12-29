@@ -2,7 +2,7 @@ import passport from "passport";
 import local from 'passport-local'
 import jwt from 'passport-jwt'
 import userModel from "../models/user.model.js"
-import { createHash } from "../utils/hashingUtils.js";
+import { createHash , inValidPassword } from "../utils/hashingUtils.js";
 
 const LocalStrategy= local.Strategy
 const JWTStrategy= jwt.Strategy
@@ -33,7 +33,7 @@ const initializePassport=()=>{
             passReqToCallback:true,
             usernameField:"email"
         },
-        async(req,username,inValidPassword,done)=>{
+        async(req,username,password,done)=>{
             const {firtName,lastName, age}= req.body
             try {
                 const user=await userModel.findOne({email:usernameField})
@@ -44,7 +44,8 @@ const initializePassport=()=>{
                     password:createHash(password),
                     firtName,
                     lastName,
-                    age
+                    age,
+                    cart
                 }
                 const result=await userModel.create(newUser)
                 done(null,result)

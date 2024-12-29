@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     email:{
         type:String,
         default:"",
-        unique
+        unique:true,
     },
     password:{
         type:String,
@@ -25,7 +25,12 @@ const userSchema = mongoose.Schema({
     roles:{
         type:[String],
         default:["user"]
-    }
+    },
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cart",
+        default: null
+    },
 })
 
 export default mongoose.model('user',userSchema)
