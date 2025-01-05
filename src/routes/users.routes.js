@@ -2,10 +2,11 @@ import { Router } from "express";
 import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import {generateToken} from "../utils/generateToken.js"
+import { passportCall } from "../utils/passportCall.js";
 
 const router= Router()
 
-router.post('/',passport.authenticate('register',{session:false,failureRedirect:'/api/user/failRegister'}),async(req,res)=>{
+router.post('/',passportCall('register'),async(req,res)=>{
     try {
 
         if(!req.user) return res.status(400).json({message:"error en registro"})
@@ -18,7 +19,8 @@ router.post('/',passport.authenticate('register',{session:false,failureRedirect:
     
 })
 
-router.get('/current',passport.authenticate('jwt',{session:false}),authorization("admin"),(req,res)=>{
+
+router.get('/current',passportCall('jwt'),authorization("admin"),(req,res)=>{
     
     const payload = {
         firstName:req.user.firstName,
