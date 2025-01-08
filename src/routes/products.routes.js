@@ -14,7 +14,8 @@ router.get('/',passportCall('jwt'),authorization('user'),async(req,res)=>{
 
 router.post('/addcart/:id',passportCall('jwt'),authorization('user'),async(req,res)=>{
     const productId=req.params.id
-    const userId=req.user.id
+    const userId=req.user._id
+    const mailUser=req.user.email
 
     const cartSelected=await cartModel.findOne({user:userId})
 
@@ -25,6 +26,7 @@ router.post('/addcart/:id',passportCall('jwt'),authorization('user'),async(req,r
     
     if(!cartSelected){
         await cartModel.create(datosCart)
+        await userModel.updateOne({ email: mailUser }, { $set: { cart: datosCart } });
     } else {
 
         await cartModel.updateOne(
