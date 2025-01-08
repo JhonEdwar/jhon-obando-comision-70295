@@ -6,7 +6,7 @@ import { passportCall } from "../utils/passportCall.js";
 
 const router= Router()
 
-router.post('/',passportCall('register'),async(req,res)=>{
+router.post('/register',passportCall('register'),async(req,res)=>{
     try {
         if(!req.user) return res.status(400).json({message:"error en registro"})
         const token = generateToken(req.user)
@@ -40,5 +40,6 @@ router.get('/current',passportCall('jwt'),authorization("admin"),(req,res)=>{
 router.get('/logout', (req,res)=>{
     res.clearCookie('cookieJWTEntrega').json({message:'sesión cerrada'})
 })
+
 
 export default router
