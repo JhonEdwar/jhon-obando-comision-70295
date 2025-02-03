@@ -3,13 +3,13 @@ import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import {generateToken} from "../utils/generateToken.js"
 import { passportCall } from "../utils/passportCall.js";
-import {login, register} from "../controllers/user.controller.js"
+import {login, register,logout} from "../controllers/auth.controller.js"
 
 const router= Router()
 
 router.post('/register',passportCall('register'),register)
 router.post('/login',passportCall("login"),login)
-router.get('/logout', )
+router.get('/logout', logout)
 
 
 router.get('/current',passportCall('jwt'),authorization("admin"),(req,res)=>{
