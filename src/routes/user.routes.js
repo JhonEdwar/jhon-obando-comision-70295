@@ -1,25 +1,10 @@
-import { Router } from "express";
-import passport from "passport";
-import { authorization } from "../middlewares/authorization.js";
-import {generateToken} from "../utils/generateToken.js"
-import { passportCall } from "../utils/passportCall.js";
-import {login, register} from "../controllers/user.controller.js"
+import { Router } from "express"
+import { userController } from "../controllers/user.controller.js"
 
-const router= Router()
+const router = Router()
 
-router.post('/register',passportCall('register'),register)
-router.post('/login',passportCall("login"),login)
-router.get('/logout', )
-
-
-router.get('/current',passportCall('jwt'),authorization("admin"),(req,res)=>{
-    const payload = {
-        firstName:req.user.firstName,
-        lastName:req.user.lastName
-    }
-    res.status(200).send(payload)
-})
-
-
+router.get('/',userController.getUsers)
+router.patch('/:id',userController.updateUser)
+router.delete('/:id',userController.deleteUser)
 
 export default router

@@ -1,33 +1,19 @@
-import { generateToken } from "../utils/generateToken"
+import { userService } from "../services/user.service.js"
 
-export const register=async(req,res)=>{
-        try {
-            if(!req.user) return res.status(400).json({message:"error en registro"})
-            const token = generateToken(req.user)
-            res.cookie('entregaFinal',token,{httpOnly:true}).json({message:'usuario registrado'})
-    
-        } catch (error) {
-            res.status(400).json(error)
-        }   
-    
+export const userController = {
+    getUsers: async (req, res) => {
+        const users= await userService.getUsers()
+        res.send(users)
+    },
+    updateUser: async (req, res) => {
+        const id = parseInt(req.params.id)
+        const updateUser = req.body
+        const response = await userService.updateUser(id,updateUser)
+        res.send({message: response})
+    },
+    deleteUser: async (req, res) => {
+        const id = parseInt(req.params.id)
+        const response = await userService.deleteUser(parseInt(id))
+        res.send({message: response})
+    }
 }
-
-export const login=async(req,res)=>{
-    try {
-        if(!req.user) return res.status(400).json({message:"Registration failed"})
-        const token = generateToken(req.user)
-        res.cookie('entregaFinal',token,{httpOnly:true}).json({message:'Ok login'})
-    } catch (error) {
-        res.status(400).json(error)
-    }  
-
-}
-
-export const logout=async(req,res)=>{
-        res.clearCookie('cookieJWTEntrega').json({message:'sesión cerrada'})
-}
-
-
-
-
-

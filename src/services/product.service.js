@@ -1,0 +1,20 @@
+import { productDao } from "../dao/product.dao.js"
+
+export const toyService = {
+    getProduct: () => {
+        const products = productDao.getProduct()
+        return products
+    },
+    createProduct: (product) => {
+        productDao.createProduct(product)
+        return 'product created!'
+    },
+    updateProduct: (id,updateProduct) => {
+        productDao.updateProduct(id,updateProduct)
+        return 'product updated!'
+    },
+    deleteProduct: (id) => {
+        productDao.deleteProduct(id)
+        return 'product deleted!'
+    }
+}

@@ -5,10 +5,6 @@ export const userService = {
         const users = await userDao.getUsers()
         return users
     },
-    createUser: async (user) => {
-        await userDao.createUser(user)
-        return 'User created!'
-    },
     updateUser: async (id,updateUser) => {
         await userDao.updateUser(id,updateUser)
         return 'User updated!'

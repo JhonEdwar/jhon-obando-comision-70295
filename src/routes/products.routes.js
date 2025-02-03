@@ -1,48 +1,11 @@
-import { Router } from "express";
-import productModel from "../models/product.model.js";
-import { passportCall } from "../utils/passportCall.js";
-import { authorization } from "../middlewares/authorization.js";
-import cartModel from "../models/cart.model.js";
-import userModel from "../models/admin.model.js";
+import { Router } from "express"
+import { productController } from "../controllers/product.controller.js"
 
 const router = Router()
 
-router.get('/',passportCall('jwt'),authorization('user'),async(req,res)=>{
-    const products=await productModel.find({})
-    res.status(200).json(products)
-})
-
-router.post('/addcart/:id',passportCall('jwt'),authorization('user'),async(req,res)=>{
-    try {
-        const productId=req.params.id
-        const userId=req.user._id
-        const mailUser=req.user.email
-
-        const cartSelected=await cartModel.findOne({user:userId})
-
-        const datosCart={
-            product:{ $push: { productId: productId, quantity:1 } },
-            user: userId
-        }
-        
-        if(!cartSelected){
-            await cartModel.create(datosCart)
-            await userModel.updateOne({ email: mailUser }, { $set: { cart: datosCart } });
-        } else {
-
-            await cartModel.updateOne(
-                { _id: cartSelected._id },
-                { $push: { products: { productId, quantity: 1 } } }
-            )
-        }
-        res.status(200).send({message:'product create'})
-        
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-    
-    
-})
+router.get('/',productController.getProducts)
+router.post('/',productController.createProduct)
+router.patch('/:id',productController.updateProduct)
+router.delete('/:id',productController.deleteProduct)
 
 export default router
-

@@ -1,8 +1,9 @@
 import passport from "passport";
 import local from 'passport-local'
 import jwt,{ ExtractJwt } from 'passport-jwt'
-import userModel from "../models/admin.model.js"
+import userModel from "../models/user.model.js"
 import { createHash ,isValidPassword  } from "../utils/hashingUtils.js";
+import { authSevice } from "../services/auth.service.js";
 
 const LocalStrategy= local.Strategy
 const JWTStrategy= jwt.Strategy
@@ -33,46 +34,14 @@ const initializePassport=()=>{
             passReqToCallback:true,
             usernameField:"email"
         },
-        async(req,username,password,done)=>{
-            console.log("ejecución passport.config.js passport use register")
-            const {firstName,lastName, age,roles,cart}= req.body
-            try {
-                const user=await userModel.findOne({email:username})
-                if(user) return done(null,false,{message:"User already exists"})
+        authSevice.createUser
 
-                const newUser={
-                    email:username,
-                    password:createHash(password),
-                    firstName,
-                    lastName,
-                    age,
-                    roles,
-                    cart
-                }
-                const result=await userModel.create(newUser)
-                console.log("despues de crear usuario antes de return")
-                return done(null,result)
-
-            } catch (error) {
-                return done(error)
-            }
-        }
      ))
 
      passport.use('login',new LocalStrategy(
         {usernameField:'email'},
-        async (username,password,done) => {
-            try {
-                const user = await userModel.findOne({email:username})
-                if(!user) return done(null,false)
-                if(!isValidPassword(user,password)) return done(null,false)
-                return done(null,user)
+        authSevice.authSevice
 
-            } catch (error) {
-                return done(error)
-
-            }
-        }
     ))
 
 }
