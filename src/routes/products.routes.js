@@ -1,9 +1,9 @@
 import { Router } from "express";
 import productModel from "../models/product.model.js";
-import { passportCall } from "../utils/passportCall";
-import { authorization } from "../middlewares/authorization";
+import { passportCall } from "../utils/passportCall.js";
+import { authorization } from "../middlewares/authorization.js";
 import cartModel from "../models/cart.model.js";
-import userModel from "../models/user.model.js";
+import userModel from "../models/admin.model.js";
 
 const router = Router()
 

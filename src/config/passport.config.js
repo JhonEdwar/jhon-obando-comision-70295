@@ -1,14 +1,14 @@
 import passport from "passport";
 import local from 'passport-local'
 import jwt,{ ExtractJwt } from 'passport-jwt'
-import userModel from "../models/user.model.js"
-import { createHash } from "../utils/hashingUtils.js";
+import userModel from "../models/admin.model.js"
+import { createHash ,isValidPassword  } from "../utils/hashingUtils.js";
 
 const LocalStrategy= local.Strategy
 const JWTStrategy= jwt.Strategy
 
 const cookieExtractor = (req) => {
-    return req && req.cookies ? req.cookies["cookieJWTEntrega"] : null
+    return req && req.cookies ? req.cookies["entregaFinal"] : null
 }
 
 
@@ -34,21 +34,24 @@ const initializePassport=()=>{
             usernameField:"email"
         },
         async(req,username,password,done)=>{
-            const {firtName,lastName, age}= req.body
+            console.log("ejecución passport.config.js passport use register")
+            const {firstName,lastName, age,roles,cart}= req.body
             try {
-                const user=await userModel.findOne({email:usernameField})
-                if(user) return done(null,false)
+                const user=await userModel.findOne({email:username})
+                if(user) return done(null,false,{message:"User already exists"})
 
                 const newUser={
                     email:username,
                     password:createHash(password),
-                    firtName,
+                    firstName,
                     lastName,
                     age,
+                    roles,
                     cart
                 }
                 const result=await userModel.create(newUser)
-                done(null,result)
+                console.log("despues de crear usuario antes de return")
+                return done(null,result)
 
             } catch (error) {
                 return done(error)

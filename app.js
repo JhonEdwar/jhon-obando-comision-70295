@@ -1,9 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import usersRoutes from './src/routes/users.routes.js'
+import usersRoutes from './src/routes/auth.routes.js'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
-import initializePassport from './src/config/passport.config'
+import initializePassport from './src/config/passport.config.js'
 import passport from 'passport'
 import productsRoutes from './src/routes/products.routes.js'
 
