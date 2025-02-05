@@ -1,6 +1,6 @@
-import Buyer from "../daos/buyer.dao.js"
+import BuyerDao from "../daos/buyer.dao.js"
 
-const buyerService = new Buyer()
+const buyerService = new BuyerDao()
 
 
 export const getBuyersService = async () => {
@@ -23,13 +23,3 @@ export const getBuyerByIdService = async (id) => {
     }
 }
 
-
-export const createBuyerService = async (buyerData) => {
-    try {
-        const result = await buyerService.save(buyerData)
-        return result
-    } catch (error) {
-        console.error("Error in createBuyerService:", error)
-        throw new Error("Failed to create buyer")
-    }
-}

@@ -40,7 +40,7 @@ const initializePassport=()=>{
 
      passport.use('login',new LocalStrategy(
         {usernameField:'email'},
-        (username, password, done) => loginUser(username, password, done)
+        (req,username,password,done) => loginUser(req,username,password,done)
 
     ))
 

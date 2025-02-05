@@ -4,7 +4,7 @@ import {authorization} from "../middlewares/authorization.js"
 
 const router = Router()
 
-router.get('/',authorization(["business"]),getBuyers)
-router.get('/:id',authorization(["business"]),getBuyerById)
+router.get('/',authorization(["buyer"]),getBuyers)
+router.get('/:id',authorization(["buyer"]),getBuyerById)
 
 export default router

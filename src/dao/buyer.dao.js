@@ -1,6 +1,6 @@
 import buyerModel from "../models/buyer.model.js";
 
-export default class Buyer {
+export default class BuyerDao{
     constructor() {}
 
     get = async () => {
@@ -20,6 +20,16 @@ export default class Buyer {
         } catch (error) {
             console.log(error)
             return { error: "Failed to fetch buyer by ID" }
+        }
+    }
+    
+    getByEmail = async (email) => {
+        try {
+            const buyer = await buyerModel.findOne({ email })
+            return buyer
+        } catch (error) {
+            console.log(error)
+            return { error: "Failed to fetch buyer by email" }
         }
     }
 
