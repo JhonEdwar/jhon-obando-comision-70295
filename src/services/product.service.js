@@ -1,6 +1,6 @@
 import { productDao } from "../dao/product.dao.js"
 
-export const toyService = {
+export const productService = {
     getProduct: () => {
         const products = productDao.getProduct()
         return products

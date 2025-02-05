@@ -3,7 +3,7 @@ import local from 'passport-local'
 import jwt,{ ExtractJwt } from 'passport-jwt'
 import userModel from "../models/user.model.js"
 import { createHash ,isValidPassword  } from "../utils/hashingUtils.js";
-import { authSevice } from "../services/auth.service.js";
+import { createUser, loginUser } from "../services/auth.service.js";
 
 const LocalStrategy= local.Strategy
 const JWTStrategy= jwt.Strategy
@@ -34,13 +34,13 @@ const initializePassport=()=>{
             passReqToCallback:true,
             usernameField:"email"
         },
-        authSevice.createUser
+        (req, username, password, done) => createUser(req, username, password, done)
 
      ))
 
      passport.use('login',new LocalStrategy(
         {usernameField:'email'},
-        authSevice.authSevice
+        (username, password, done) => loginUser(username, password, done)
 
     ))
 

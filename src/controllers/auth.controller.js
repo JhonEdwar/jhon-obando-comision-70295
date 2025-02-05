@@ -1,4 +1,4 @@
-import { generateToken } from "../utils/generateToken"
+import { generateToken } from "../utils/generateToken.js"
 
 export const register=async(req,res)=>{
         try {

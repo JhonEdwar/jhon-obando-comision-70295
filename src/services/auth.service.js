@@ -2,9 +2,7 @@
 import { authDao } from "../dao/admin.dao.js"
 
 
-export const authSevice={
-    createUser:async(req,username,password,done)=>{
-        console.log("ejecución passport.config.js passport use register")
+export const createUser=async(req,username,password,done)=>{
         const {firstName,lastName, age,roles,cart}= req.body
         try {
             const user=await authDao.findOne(username)
@@ -26,9 +24,9 @@ export const authSevice={
         } catch (error) {
             return done(error)
         }
-    },
+    }
     
-    loginUser:async (username,password,done) => {
+export const loginUser=async (username,password,done) => {
         try {
             const user=await authDao.findOne(username)
             if(!user) return done(null,false)
@@ -40,4 +38,3 @@ export const authSevice={
 
         }
     }
-}
