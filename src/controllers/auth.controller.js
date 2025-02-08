@@ -24,7 +24,7 @@ export const login=async(req,res)=>{
 }
 
 export const logout=async(req,res)=>{
-        res.clearCookie('cookieJWTEntrega').json({message:'sesión cerrada'})
+        res.clearCookie('entregaFinal').json({message:'sesión cerrada'})
 }
 
 

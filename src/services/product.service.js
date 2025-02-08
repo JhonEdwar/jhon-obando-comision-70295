@@ -1,4 +1,4 @@
-import { productDao } from "../dao/product.dao.js"
+import { productDao } from "../daos/product.dao.js"
 
 export const productService = {
     getProduct: () => {

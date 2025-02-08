@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js"
+import userModel from "../models/admin.model.js"
 
 
 export default class AdminDao{

@@ -1,7 +1,7 @@
-import BusinessDao from "../dao/business.dao"
-import BusDTO from "../dtos/business.dto"
+import BusinessDao from "../daos/business.dao.js"
+import BusDTO from "../dtos/business.dto.js"
 
-const BusinessrService = new BuyerDao()
+const BusinessrService = new BusinessDao()
 
 
 export const getBusinessService = async () => {

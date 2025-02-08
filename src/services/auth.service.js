@@ -1,7 +1,8 @@
 
-import AdminDao  from "../dao/admin.dao.js"
-import BuyerDao from "../dao/buyer.dao.js"
-import businessDao from "../dao/business.dao.js"
+import AdminDao  from "../daos/admin.dao.js"
+import BuyerDao from "../daos/buyer.dao.js"
+import businessDao from "../daos/business.dao.js"
+import { createHash, isValidPassword } from "../utils/hashingUtils.js"
 
 const buyerService = new BuyerDao()
 const businessService = new businessDao()
@@ -55,9 +56,9 @@ export const createUser=async(req,username,password,done)=>{
     
     
 export const loginUser=async (req,username,password,done) => {
-    const {role } = req.body
-
-    if (!role || !username || !username) {
+    const {role} = req.body
+    
+    if (!role || !username) {
         return done(null,false,"Required parameters are missing" )
     }
 
