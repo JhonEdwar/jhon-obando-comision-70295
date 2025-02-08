@@ -1,17 +1,17 @@
 import BusinessDao from "../daos/business.dao.js"
 import BusDTO from "../dtos/business.dto.js"
 
-const BusinessrService = new BusinessDao()
+const BusinessService = new BusinessDao()
 
 
 export const getBusinessService = async () => {
     try {
-        const result = await BusinessrService.get()
+        const result = await BusinessService.get()
         const businesses = await result.map(business=>{
             const newBusiness= new BusDTO(business)
-            return businesses
+            return newBusiness
         })
-        return result
+        return businesses
     } catch (error) {
         console.error("Error in getBusinessService:", error)
         throw new Error("Failed to get business")
@@ -20,7 +20,7 @@ export const getBusinessService = async () => {
 
 export const getBusinessByIdService = async (id) => {
     try {
-        const result = await BusinessrService.getById(id)
+        const result = await BusinessService.getById(id)
         const business= new BusDTO(result)
         return business
     } catch (error) {
