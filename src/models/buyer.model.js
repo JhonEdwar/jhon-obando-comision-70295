@@ -4,11 +4,11 @@ const buyerSchema = mongoose.Schema({
     firstName:String,
     lastName:String,
     email:String,
+    password:String,
     role:{
         type:String,
         default:"buyer"
     },
-    password:String,
     orders:[
         {
             type:mongoose.SchemaTypes.ObjectId,

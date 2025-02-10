@@ -2,17 +2,18 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
-import initializePassport from './src/config/passport.config.js'
+import initializePassport from './config/passport.config.js'
 import passport from 'passport'
-import productsRoutes from './src/routes/products.routes.js'
-import usersRoutes from './src/routes/auth.routes.js'
-import businessRoutes from './src/routes/business.routes.js'
-import buyerRoutes from './src/routes/buyer.routes.js'
+import productsRoutes from './routes/products.routes.js'
+import usersRoutes from './routes/auth.routes.js'
+import businessRoutes from './routes/business.routes.js'
+import buyerRoutes from './routes/buyer.routes.js'
 import cors from 'cors'
 
 dotenv.config()
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
