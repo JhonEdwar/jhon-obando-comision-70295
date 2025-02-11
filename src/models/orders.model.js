@@ -10,8 +10,14 @@ const ordersSchema = mongoose.Schema({
         ref:"buyers"
     },
     products:[],
-    status:String,
-    totalPrice:Number,
+    status:{
+        type: String,
+        default: "pending"
+    },
+    totalPrice: {
+        type: Number,
+        min: 0 
+    },
     createdAt:{
         type:Date,
         default:Date.now
