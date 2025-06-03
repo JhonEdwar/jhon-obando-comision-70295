@@ -9,7 +9,7 @@ const LocalStrategy= local.Strategy
 const JWTStrategy= jwt.Strategy
 
 const cookieExtractor = (req) => {
-    return req && req.cookies ? req.cookies["entregaFinal"] : null
+    return req && req.cookies ? req.cookies["userCookieShop"] : null
 }
 
 

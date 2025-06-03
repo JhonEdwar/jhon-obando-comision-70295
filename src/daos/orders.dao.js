@@ -1,4 +1,4 @@
-import ordersModel from "../models/orders.model";
+import ordersModel from "../models/orders.model.js";
 
 export default class OrdersDao{
     constructor() {}

@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 const bussinesSchema = mongoose.Schema({
-    fistName:String,
+    firstName:String,
     lastName:String,
     email:String,
     password:String,

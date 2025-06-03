@@ -12,6 +12,7 @@ import orderRoutes from './routes/order.routes.js'
 import cors from 'cors'
 
 dotenv.config()
+
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))

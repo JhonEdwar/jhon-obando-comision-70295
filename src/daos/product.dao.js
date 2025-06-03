@@ -2,8 +2,8 @@ import productModel from "../models/product.model.js"
 
 export const productDao = {
 
-    getProducts:async ()=> {
-        const products = await productModel.find({})
+    getProduct:async ()=> {
+        const products = await productModel.find()
         return products
     },
     createProduct: async  (product) => {
