@@ -13,6 +13,11 @@ const productSchema=mongoose.Schema({
     stock:{
         type:Number,
         required:true,
+    },
+    business:{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:"business",
+        required:true
     }
 
 

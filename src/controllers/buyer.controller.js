@@ -20,3 +20,15 @@ export const getBuyerById = async (req, res) => {
     }
 }
 
+
+export const updateBuyer = async (req, res) => {
+    const { id } = req.params
+    const updateBuyer = req.body
+    try {
+        const response = await updateBuyerService(id, updateBuyer)
+        res.status(200).json({ message: response });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+}
+

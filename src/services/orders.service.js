@@ -1,14 +1,15 @@
 import OrdersDao from "../daos/orders.dao.js"
 import {getBuyerByIdService}  from "../services/buyer.service.js"
 import {getBusinessByIdService} from "../services/business.service.js"
+import {productService} from "./product.service.js"
 
-const ordersService = new OrdersDao()
+const ordersDao = new OrdersDao()
 
 
 export const getOrdersService = async () => {
     try {
-        const result = await ordersService.get()
-        const orders = result.map(order => order)
+        const orders = await ordersDao.get()
+        // const orders = result.map(order => order)
         return orders
     } catch (error) {
         console.error("Error in getOrdersService:", error)
@@ -18,7 +19,7 @@ export const getOrdersService = async () => {
 
 export const getOrdersByIdService = async (id) => {
     try {
-        const order = await ordersService.getById(id)  
+        const order = await ordersDao.getById(id)  
         return order
     } catch (error) {
         console.error("Error in getOrdersByIdService:", error)
@@ -29,7 +30,7 @@ export const getOrdersByIdService = async (id) => {
 
 export const getOrdersByIdBuyerSer = async (idBuyer) => {
     try {
-        const order = await ordersService.getByIdBuyer(idBuyer)  
+        const order = await ordersDao.getByIdBuyer(idBuyer)  
         return order
     } catch (error) {
         console.error("Error in getOrdersByIdBuyer:", error)
@@ -40,7 +41,7 @@ export const getOrdersByIdBuyerSer = async (idBuyer) => {
 
 export const getOrdersByIdBusinessSer = async (idBusiness) => {
     try {
-        const order = await ordersService.getByIdBusiness(idBusiness)  
+        const order = await ordersDao.getByIdBusiness(idBusiness)  
         return order
     } catch (error) {
         console.error("Error in getOrdersByIdBusiness:", error)
@@ -48,67 +49,63 @@ export const getOrdersByIdBusinessSer = async (idBusiness) => {
     }
 }
 
-export const orderCreateService= async (idBuyer, idBusiness, idsProducts, quantities) => {
+export const orderCreateService= async (idBuyer, idBusiness, products) => {
     try {
         const resultBuyer = await getBuyerByIdService(idBuyer)
         if (!resultBuyer) {
-            return res.sendNotFound("Buyer not found")
+            throw new Error("Buyer not found")
         }
 
         const resultBusiness = await getBusinessByIdService(idBusiness)
         if (!resultBusiness) {
-            return res.sendNotFound("Business not found")
+            throw new Error("Business not found")
         }
 
-        const actualOrders = resultBusiness.products.filter(product => idsProducts.includes(product.id))
-        if (idsProducts.length !== actualOrders.length) {
-            return res.sendBadRequest("Not all products are available")
-        }
+        let total = 0
 
-
-
-        for (let i = 0; i < actualOrders.length; i++) {
-            const product = actualOrders[i]
-            const quantity = quantities[i]
-            if (product.stock < quantity) {
-                return res.sendBadRequest(`Insufficient stock for product ${product.title}`)
+        for (const product of products) {
+            if (!product._id || !product.quantity) {
+                throw new Error("Product ID and quantity are required")
             }
+            const currentProduct = await productService.getProductById(product._id) 
+            total += currentProduct.price * product.quantity  
         }
 
-        const total = actualOrders.reduce((acc, product, index) => acc + product.price * quantities[index], 0)
+        const orderProducts = products.map(p => ({
+            product: p._id,
+            quantity: p.quantity
+        }));
+
 
         const order = {
             business: resultBusiness,
             buyer: resultBuyer,
             status: "pending",
-            products: actualOrders.map((product, index) => ({
-                ...product,
-                quantity: quantities[index]
-            })),
-            totalPrice: total
+            totalPrice: total,
+            products: orderProducts,
         }
 
 
-        const orderRsult = await ordersService.create(order)
-        
+        const orderResult = await ordersDao.create(order)
+
         resultBuyer.orders.push(orderResult._id)
         await buyerService.update(idBuyer, resultBuyer)
 
 
-        return orderRsult 
+        return orderResult
 
 
     } catch (error) {
         console.error("Error in getOrdersCreate:", error)
-        throw new Error("Failed to create business")
+        throw new Error("Failed to create order")
     }
 }
 
 export const ordersResolveService= async (id,resolve) => {
     try {
-        const order = await ordersService.getById(id)  
+        const order = await ordersDao.getById(id)  
         order.status = resolve
-        const updatedStatus= await ordersService.resolve(order._id, order)
+        const updatedStatus= await ordersDao.resolve(order._id, order)
         return updatedStatus
   
     } catch (error) {

@@ -20,3 +20,17 @@ export const getBusinessById = async (req, res) => {
     }
 }
 
+
+export const addProduct = async (req, res) => {
+    const { id } = req.params
+    const product = req.body
+    try {
+        const result = await getBusinessByIdService(id)
+        if (!result) return res.sendServerError("Something went wrong, try again later bussines not found")
+        result.products.push(product)
+        await businessService.update(result._id, result)
+        res.sendSuccess(result)
+    } catch (error) {
+        res.sendServerError(error)
+    }
+}

@@ -9,6 +9,7 @@ import usersRoutes from './routes/auth.routes.js'
 import businessRoutes from './routes/business.routes.js'
 import buyerRoutes from './routes/buyer.routes.js'
 import orderRoutes from './routes/order.routes.js'
+import cartRoutes from './routes/cart.routes.js'
 import cors from 'cors'
 
 dotenv.config()
@@ -28,6 +29,7 @@ app.use('/api/users',usersRoutes)
 app.use('/api/products',productsRoutes)
 app.use('/api/business',businessRoutes)
 app.use('/api/buyer',buyerRoutes)
+app.use('/api/cart/',cartRoutes)
 app.use('/api/order',orderRoutes)
 mongoose.connect(process.env.MONGO)
 app.listen(process.env.PORT, ()=> console.log('Servidor levantado en el puerto: ' + process.env.PORT ))

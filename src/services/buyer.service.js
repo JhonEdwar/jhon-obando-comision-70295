@@ -18,6 +18,20 @@ export const getBuyersService = async () => {
     }
 }
 
+export const getBuyerByEmailService = async (email) => {
+    try {
+        const result = await buyerService.getByEmail(email)
+        if (!result) {
+            throw new Error("Buyer not found")
+        }
+        const buyer = new BuyerDTO(result)
+        return buyer
+    } catch (error) {
+        console.error("Error in getBuyerByEmailService:", error)
+        throw new Error("Failed to get buyer by email")
+    }
+}
+
 export const getBuyerByIdService = async (id) => {
     try {
         const result = await buyerService.getById(id)
@@ -28,4 +42,17 @@ export const getBuyerByIdService = async (id) => {
         throw new Error("Failed to get buyer by ID")
     }
 }
+
+export const updateBuyerService = async (id, updateBuyer) => {
+    try {
+        const result = await buyerService.update(id, updateBuyer)
+        if (result.error) {
+            throw new Error(result.error)
+        }
+        return "Buyer updated successfully"
+    } catch (error) {
+        console.error("Error in updateBuyerService:", error)
+        throw new Error("Failed to update buyer")
+    }
+}   
 

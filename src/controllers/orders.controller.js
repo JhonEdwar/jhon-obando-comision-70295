@@ -1,4 +1,10 @@
-import {getOrdersService,getOrdersByIdService, getOrdersByIdBuyerSer,getOrdersByIdBusinessSer,orderCreateService,ordersResolveService} from '../services/orders.service.js'
+import {getOrdersService,
+    getOrdersByIdService, 
+    getOrdersByIdBuyerSer,
+    getOrdersByIdBusinessSer,
+    orderCreateService,
+    ordersResolveService
+} from '../services/orders.service.js'
 
 
 export const getOrders = async (req, res) => {
@@ -44,18 +50,16 @@ export const getOrdersByIdBusiness = async (req, res) => {
 
 
 export const orderCreate = async (req, res) => {
-    const { idBuyer, idBusiness, idsProducts, quantities } = req.body
+    const { idBuyer, idBusiness, products} = req.body
     try {
-        if (!idBuyer || !idBusiness || !idsProducts || !quantities) {
-            return res.sendBadRequest("Required parameters are missing")
+        if (!idBuyer || !idBusiness || !products || !Array.isArray(products) || products.length === 0) {
+            return res.status(400).json({ message: "Required parameters are missing" });
         }
-        if (idsProducts.length !== quantities.length) {
-            return res.sendBadRequest("Products and quantities arrays must have the same length")
-        }
+        
 
-        const orderResult = await orderCreateService(idBuyer, idBusiness, idsProducts, quantities)
+        const orderResult = await orderCreateService(idBuyer, idBusiness, products)
         if (!orderResult) {
-            return res.sendServerError("Order creation failed")
+            return res.status(400).json({ message: "Order creation failed" });
         }
        
         res.status(201).json({ message: "Order create successfully", order: orderResult});
@@ -69,15 +73,15 @@ export const ordersResolve = async (req, res) => {
     const { id } = req.params
     const { resolve } = req.body
 
-    if (!id || !resolve) return res.sendBadRequest("Required parameters are missing")
+    if (!id || !resolve) return res.status(400).json({ message: "Required parameters are missing" });
         if (resolve !== "confirmed" && resolve !== "pending" && resolve !== "cancelled") {
-            return res.sendBadRequest("Invalid 'resolve' parameter")
+            return res.status(400).json({ message: "Invalid 'resolve' parameter" });
         }
 
     try {
         const statusOrder=await ordersResolveService(id,resolve)
         if (!statusOrder) {
-            return res.sendServerError("Order update failed")
+            return res.status(500).json({ message: "Order update failed" });
         }
         res.status(204).json({ message: "Edit status create successfully", status: statusOrder});
     } catch (error) {

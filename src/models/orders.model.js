@@ -3,20 +3,38 @@ import mongoose from "mongoose"
 const ordersSchema = mongoose.Schema({
     business:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:"business"
+        ref:"business",
+        required: true
     },
     buyer:{
         type:mongoose.SchemaTypes.ObjectId,
-        ref:"buyers"
+        ref:"buyers",
+        required: true
     },
-    products:[],
+    products: [
+        {
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "product",
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1
+            },
+        }
+   ],
     status:{
         type: String,
+        enum: ["pending", "confirmed", "cancelled"],
         default: "pending"
     },
     totalPrice: {
         type: Number,
-        min: 0 
+        min: 0,
+        required: true
+
     },
     createdAt:{
         type:Date,

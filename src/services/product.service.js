@@ -5,6 +5,10 @@ export const productService = {
         const products = await productDao.getProduct()
         return products
     },
+    getProductById: async (id) => {
+        const product = await productDao.getProductById(id)
+        return product
+    },
     createProduct: async (product) => {
         await productDao.createProduct(product)
         return 'product created!'

@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const bussinesSchema = mongoose.Schema({
+const businessSchema = mongoose.Schema({
     firstName:String,
     lastName:String,
     email:String,
@@ -8,8 +8,15 @@ const bussinesSchema = mongoose.Schema({
     role:{
         type:String,
         default:"business"
-    },
-    products:[]
+    }
 })
 
-export default mongoose.model('business',bussinesSchema)
+ businessSchema.virtual('products',{
+    ref:'product',
+    localField:'_id',
+    foreignField:'business',
+ })
+businessSchema.set("toObject", { virtuals: true });
+businessSchema.set("toJSON", { virtuals: true });
+
+export default mongoose.model('business',businessSchema)

@@ -10,8 +10,10 @@ const cartSchema = mongoose.Schema({
             },
             quantity: {
                 type: Number,
+                required: true,
                 default: 1,
-                max: 100 
+                min:1,
+                max: 100,
             }
         }
     ],
@@ -19,7 +21,14 @@ const cartSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         required: true
-    }
+    },
+    createdAt: {
+    type: Date,
+    default: Date.now
+    },
 });
 
 export default mongoose.model('cart',cartSchema)
+
+
+

@@ -28,3 +28,4 @@ export const getBusinessByIdService = async (id) => {
         throw new Error("Failed to get business by ID")
     }
 }
+

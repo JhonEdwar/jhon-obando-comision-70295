@@ -53,7 +53,7 @@ export default class OrdersDao{
 
     resolve = async (id, order) => {
         try {
-            const result= await ordersModel.updateOne({ _id: id }, { $set: order })
+            const result = await ordersModel.updateOne({ _id: id }, { $set: order })
             return result
         } catch (error) {
             console.log(error)
