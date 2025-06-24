@@ -1,12 +1,14 @@
 import { Router } from "express"
-import { productController } from "../controllers/product.controller.js"
+import { getProducts, getProductsById, createProduct, updateProduct, deleteProduct} from "../controllers/product.controller.js"
+import {authorization} from "../middlewares/authorization.js"
+import {passportCall} from "../utils/passportCall.js"
 
 const router = Router()
 
-router.get('/',productController.getProducts)
-router.get('/:id',productController.getProductsById)
-router.post('/',productController.createProduct)
-router.patch('/:id',productController.updateProduct)
-router.delete('/:id',productController.deleteProduct)
+router.get('/',passportCall('jwt'),getProducts)
+router.get('/:id',passportCall('jwt'),getProductsById)
+router.post('/',passportCall('jwt'),authorization(["business"]),createProduct)
+router.patch('/:id',passportCall('jwt'),authorization(["business"]),updateProduct)
+router.delete('/:id',passportCall('jwt'),authorization(["business"]),deleteProduct)
 
 export default router

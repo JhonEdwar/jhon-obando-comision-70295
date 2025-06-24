@@ -33,7 +33,7 @@ export const createCart = async (req, res) => {
 
     try {
         const newCart = await createCartService({ userId, products });
-        res.status(201).json(newCart);
+        res.status(201).json({ message: "Cart created successfully", newCart });
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
@@ -56,8 +56,7 @@ export const deleteCart = async (req, res) => {
     const { id } = req.params;
     try {
         await deleteCartService(id);
-         res.status(200).json({success: true,message: "Cart deleted successfully"
-    });
+         res.status(200).json({message: "Cart deleted successfully"});
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }

@@ -1,5 +1,5 @@
 import {getBusinessService, getBusinessByIdService,updateBusinessService } from "../services/business.service.js"
-import { productService } from "../services/product.service.js"
+import { createProduct } from "../services/product.service.js"
 
 export const getBusiness = async (req, res) => {
     try {
@@ -20,24 +20,38 @@ export const getBusinessById = async (req, res) => {
     }
 }
 
+export const updateBusiness = async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+    try {
+        const updatedBusiness = await updateBusinessService(id, updateData);
+        if (!updatedBusiness) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+        res.status(200).json({ message: "Business updated successfully", updatedBusiness });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+}
+
 
 export const addProduct = async (req, res) => {
     const { id } = req.params
     const product = req.body
     try {
-         // Validar datos del producto
         if (!product.title || !product.price || !product.stock) {
             return res.status(400).json({ message: "Missing required product fields" });
         }
 
-        const result = await getBusinessByIdService(id)
+        const business = await getBusinessByIdService(id)
         if (!business) {
             return res.status(404).json({ message: "Business not found" });
         }
 
-        product.business = id;
+        product.business = business._id;
 
-        const newProduct = await productService.createProduct(product)
+        const newProduct = await createProduct(product)
+
         res.status(201).json({ message: "Product added successfully", newProduct });
     } catch (error) {
        res.status(500).json({ message: "Internal Server Error", error: error.message });

@@ -9,8 +9,7 @@ const ordersDao = new OrdersDao()
 
 export const getOrdersService = async () => {
     try {
-        const orders = await ordersDao.get()
-        
+        const orders = await ordersDao.get()  
         return orders
     } catch (error) {
         console.error("Error in getOrdersService:", error)
@@ -91,8 +90,6 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
 
 
         const orderResult = await ordersDao.create(order)
-
-        // resultBuyer.orders.push(orderResult._id)
 
         await addOrderToBuyerService(idBuyer, orderResult.id)
 

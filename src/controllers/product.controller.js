@@ -1,19 +1,19 @@
-import { productService } from "../services/product.service.js"
+import { getProductService,getProductByIdService,createProductService,updateProductService, deleteProductService } from "../services/product.service.js"
 
-export const productController = {
-    getProducts: async (req, res) => {
+
+export const getProducts= async (req, res) => {
         try {
-            const products = await productService.getProduct()
+            const products = await getProductService()
             res.status(200).send(products);
         } catch (error) {
             res.status(500).send({ message: "Internal Server Error", error: error.message });
             
         }
-    },
-    getProductsById: async (req, res) => {
+    }
+export const getProductsById= async (req, res) => {
         const { id } = req.params
         try {
-            const product = await productService.getProductById(id)
+            const product = await getProductByIdService(id)
             if (!product) {
                 return res.status(404).send({ message: "Product not found" });
             }
@@ -21,23 +21,35 @@ export const productController = {
         } catch (error) {
             res.status(500).send({ message: "Internal Server Error", error: error.message });
         }
-    },
-
-
-    createProduct: async (req, res) => {
-        const product = req.body
-        const response = await productService.createProduct(product)
-        res.send({message: response})
-    },
-    updateProduct: async (req, res) => {
-        const {id} = req.params
-        const updateProduct = req.body
-        const response = await productService.updateProduct(id,updateProduct)
-        res.send({message: response})
-    },
-    deleteProduct: async (req, res) => {
-        const id = req.params.id
-        const response = await productService.deleteProduct(id)
-        res.send({message: response})
     }
-}
+
+export const createProduct = async (req, res) => {
+    try {
+        const product = req.body;
+        const response = await createProductService(product);
+        res.send({ message: "Product created successfully", product: response });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error", error: error.message });
+    }
+};
+
+export const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateProduct = req.body;
+        const response = await updateProductService(id, updateProduct);
+        res.send({ message: "Product updated successfully", product: response });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error", error: error.message });
+    }
+};
+
+export const deleteProduct = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const response = await deleteProductService(id);
+        res.send({  message: "Product deleted successfully", product: response });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error", error: error.message });
+    }
+};

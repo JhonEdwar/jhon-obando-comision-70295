@@ -49,7 +49,7 @@ export const addOrderToBuyerService = async (id, updateBuyer) => {
         if (result.error) {
             throw new Error(result.error)
         }
-        return "Buyer updated successfully"
+        return result
     } catch (error) {
         console.error("Error in updateBuyerService:", error)
         throw new Error("Failed to update buyer")
@@ -62,7 +62,7 @@ export const updateBuyerService = async (id, updateBuyer) => {
         if (result.error) {
             throw new Error(result.error)
         }
-        return "Buyer updated successfully"
+        return result
     } catch (error) {
         console.error("Error in updateBuyerService:", error)
         throw new Error("Failed to update buyer")
