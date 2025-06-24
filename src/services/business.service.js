@@ -21,6 +21,9 @@ export const getBusinessService = async () => {
 export const getBusinessByIdService = async (id) => {
     try {
         const result = await BusinessService.getById(id)
+        if (!result) {
+            throw new Error("Business not found")
+        }
         const business= new BusDTO(result)
         return business
     } catch (error) {
@@ -29,3 +32,15 @@ export const getBusinessByIdService = async (id) => {
     }
 }
 
+export const updateBusinessService = async (id, updateData) => {
+    try {
+        const result = await BusinessService.update(id, updateData)
+        if (result.error) {
+            throw new Error(result.error)
+        }
+        return "Business updated successfully"
+    } catch (error) {
+        console.error("Error in updateBusinessService:", error)
+        throw new Error("Failed to update business")
+    }
+}

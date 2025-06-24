@@ -43,6 +43,19 @@ export const getBuyerByIdService = async (id) => {
     }
 }
 
+export const addOrderToBuyerService = async (id, updateBuyer) => {
+    try {
+        const result = await buyerService.updateOrders(id, updateBuyer)
+        if (result.error) {
+            throw new Error(result.error)
+        }
+        return "Buyer updated successfully"
+    } catch (error) {
+        console.error("Error in updateBuyerService:", error)
+        throw new Error("Failed to update buyer")
+    }
+}   
+
 export const updateBuyerService = async (id, updateBuyer) => {
     try {
         const result = await buyerService.update(id, updateBuyer)
@@ -54,5 +67,5 @@ export const updateBuyerService = async (id, updateBuyer) => {
         console.error("Error in updateBuyerService:", error)
         throw new Error("Failed to update buyer")
     }
-}   
+}
 

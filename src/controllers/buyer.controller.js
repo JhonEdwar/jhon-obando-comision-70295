@@ -1,4 +1,4 @@
-import {getBuyersService, getBuyerByIdService} from "../services/buyer.service.js"
+import {getBuyersService, getBuyerByIdService, updateBuyerService} from "../services/buyer.service.js"
 
 
 export const getBuyers = async (req, res) => {

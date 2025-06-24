@@ -49,7 +49,7 @@ export const updateCartService = async (id, updateProducts) => {
 
 export const deleteCartService = async (id) => {
    
-        const result = await cartDao.delete(id);
+        const result = await cartDao.deleteCart(id)
         if (result.deletedCount === 0) {
         throw new Error("Cart not found or already deleted");
         }

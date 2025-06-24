@@ -1,7 +1,8 @@
 import OrdersDao from "../daos/orders.dao.js"
-import {getBuyerByIdService}  from "../services/buyer.service.js"
+import {getBuyerByIdService,addOrderToBuyerService }  from "../services/buyer.service.js"
 import {getBusinessByIdService} from "../services/business.service.js"
 import {productService} from "./product.service.js"
+
 
 const ordersDao = new OrdersDao()
 
@@ -9,7 +10,7 @@ const ordersDao = new OrdersDao()
 export const getOrdersService = async () => {
     try {
         const orders = await ordersDao.get()
-        // const orders = result.map(order => order)
+        
         return orders
     } catch (error) {
         console.error("Error in getOrdersService:", error)
@@ -64,10 +65,13 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
         let total = 0
 
         for (const product of products) {
-            if (!product._id || !product.quantity) {
+            if (!product._id || !product.quantity || product.quantity <= 0) {
                 throw new Error("Product ID and quantity are required")
             }
             const currentProduct = await productService.getProductById(product._id) 
+             if (!currentProduct) {
+                throw new Error(`Product with ID ${product._id} not found`)
+            }
             total += currentProduct.price * product.quantity  
         }
 
@@ -78,8 +82,8 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
 
 
         const order = {
-            business: resultBusiness,
-            buyer: resultBuyer,
+            business: idBusiness,
+            buyer: idBuyer,
             status: "pending",
             totalPrice: total,
             products: orderProducts,
@@ -88,8 +92,9 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
 
         const orderResult = await ordersDao.create(order)
 
-        resultBuyer.orders.push(orderResult._id)
-        await buyerService.update(idBuyer, resultBuyer)
+        // resultBuyer.orders.push(orderResult._id)
+
+        await addOrderToBuyerService(idBuyer, orderResult.id)
 
 
         return orderResult
@@ -104,6 +109,10 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
 export const ordersResolveService= async (id,resolve) => {
     try {
         const order = await ordersDao.getById(id)  
+             if (!order) {
+            throw new Error("Order not found")
+        }
+
         order.status = resolve
         const updatedStatus= await ordersDao.resolve(order._id, order)
         return updatedStatus

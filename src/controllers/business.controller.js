@@ -1,5 +1,5 @@
-import {getBusinessService, getBusinessByIdService} from "../services/business.service.js"
-
+import {getBusinessService, getBusinessByIdService,updateBusinessService } from "../services/business.service.js"
+import { productService } from "../services/product.service.js"
 
 export const getBusiness = async (req, res) => {
     try {
@@ -25,12 +25,21 @@ export const addProduct = async (req, res) => {
     const { id } = req.params
     const product = req.body
     try {
+         // Validar datos del producto
+        if (!product.title || !product.price || !product.stock) {
+            return res.status(400).json({ message: "Missing required product fields" });
+        }
+
         const result = await getBusinessByIdService(id)
-        if (!result) return res.sendServerError("Something went wrong, try again later bussines not found")
-        result.products.push(product)
-        await businessService.update(result._id, result)
-        res.sendSuccess(result)
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+
+        product.business = id;
+
+        const newProduct = await productService.createProduct(product)
+        res.status(201).json({ message: "Product added successfully", newProduct });
     } catch (error) {
-        res.sendServerError(error)
+       res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 }

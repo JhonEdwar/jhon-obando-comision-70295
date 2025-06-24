@@ -33,9 +33,20 @@ export default class BuyerDao{
         }
     }
 
+    updateOrders = async (id, updateBuyer) => {
+        try {
+            const result = await buyerModel.updateOne({ _id: id },{$push: { orders: updateBuyer }})
+            if (result.modifiedCount === 0) {
+                return { error: "No buyer found with the given ID" }
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: "Failed to update buyer" }
+        }
+    }
     update = async (id, updateBuyer) => {
         try {
-            const result = await buyerModel.updateOne({ _id: id }, updateBuyer)
+            const result = await buyerModel.updateOne({ _id: id },updateBuyer)
             if (result.modifiedCount === 0) {
                 return { error: "No buyer found with the given ID" }
             }

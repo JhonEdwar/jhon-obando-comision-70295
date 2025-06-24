@@ -51,6 +51,16 @@ export default class BusinessDao {
         }
     }
 
+    update = async (id, updateData) => {
+        try {
+            const result = await businessModel.findByIdAndUpdate(id, updateData);
+            return result;
+        } catch (error) {
+            console.log(error);
+            return { error: "Failed to update business" };
+        }
+    }
+
     save = async (business) => {
         try {
 
