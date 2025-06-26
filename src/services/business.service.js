@@ -35,8 +35,8 @@ export const getBusinessByIdService = async (id) => {
 export const updateBusinessService = async (id, updateData) => {
     try {
         const result = await BusinessService.update(id, updateData)
-        if (result.error) {
-            throw new Error(result.error)
+        if (!result) {
+            throw new Error("Business not found")
         }
         return "Business updated successfully"
     } catch (error) {

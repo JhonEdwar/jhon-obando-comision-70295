@@ -62,7 +62,7 @@ export const orderCreate = async (req, res) => {
             return res.status(400).json({ message: "Order creation failed" });
         }
        
-        res.status(201).json({ message: "Order create successfully", order: orderResult});
+        res.status(200).json({ message: "Order create successfully", order: orderResult});
 
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
@@ -83,7 +83,7 @@ export const ordersResolve = async (req, res) => {
         if (!statusOrder) {
             return res.status(500).json({ message: "Order update failed" });
         }
-        res.status(204).json({ message: "Edit status create successfully", status: statusOrder});
+        res.status(200).json({ message: "Edit status create successfully", status: statusOrder});
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }

@@ -7,7 +7,7 @@ const buyerService = new BuyerDao()
 export const getBuyersService = async () => {
     try {
         const result = await buyerService.get()
-        const buyers = await result.map(buyer=>{
+        const buyers =  result.map(buyer=>{
             const newBuyer= new BuyerDTO(buyer)
             return newBuyer
         })
@@ -46,8 +46,8 @@ export const getBuyerByIdService = async (id) => {
 export const addOrderToBuyerService = async (id, updateBuyer) => {
     try {
         const result = await buyerService.updateOrders(id, updateBuyer)
-        if (result.error) {
-            throw new Error(result.error)
+        if(!result) {
+            throw new Error("Buyer not found")
         }
         return result
     } catch (error) {
@@ -59,8 +59,8 @@ export const addOrderToBuyerService = async (id, updateBuyer) => {
 export const updateBuyerService = async (id, updateBuyer) => {
     try {
         const result = await buyerService.update(id, updateBuyer)
-        if (result.error) {
-            throw new Error(result.error)
+        if (!result) {
+            throw new Error("Buyer not found")
         }
         return result
     } catch (error) {
