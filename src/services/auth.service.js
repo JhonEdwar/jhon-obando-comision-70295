@@ -63,7 +63,7 @@ export const loginUser=async (req,username,password,done) => {
     }
 
     if(role !== "buyer" && role !== "business" && role !== "admin"){
-        done(null,false,"Invalid role" )
+        return done(null,false,"Invalid role" )
     }
 
     try {

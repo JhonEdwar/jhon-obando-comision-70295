@@ -1,7 +1,7 @@
 import OrdersDao from "../daos/orders.dao.js"
 import {getBuyerByIdService,addOrderToBuyerService }  from "../services/buyer.service.js"
 import {getBusinessByIdService} from "../services/business.service.js"
-import {productService} from "./product.service.js"
+import {getProductByIdService} from "./product.service.js"
 
 
 const ordersDao = new OrdersDao()
@@ -67,7 +67,7 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
             if (!product._id || !product.quantity || product.quantity <= 0) {
                 throw new Error("Product ID and quantity are required")
             }
-            const currentProduct = await productService.getProductById(product._id) 
+            const currentProduct = await getProductByIdService(product._id) 
              if (!currentProduct) {
                 throw new Error(`Product with ID ${product._id} not found`)
             }

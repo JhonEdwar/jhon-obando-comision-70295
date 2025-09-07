@@ -13,7 +13,7 @@ export default class CartDao{
 
     getByIdBuyer = async (idBuyer) => {
         try {
-            const result = await cartModel.findOne({ buyer: idBuyer})
+            const result = await cartModel.findOne({ userId: idBuyer})
             return result
         } catch (error) {
             console.log(error)

@@ -1,5 +1,5 @@
 import {getBusinessService, getBusinessByIdService,updateBusinessService } from "../services/business.service.js"
-import { createProduct } from "../services/product.service.js"
+import { createProductService } from "../services/product.service.js"
 
 export const getBusiness = async (req, res) => {
     try {
@@ -50,7 +50,7 @@ export const addProduct = async (req, res) => {
 
         product.business = business._id;
 
-        const newProduct = await createProduct(product)
+        const newProduct = await createProductService(product)
 
         res.status(201).json({ message: "Product added successfully", newProduct });
     } catch (error) {

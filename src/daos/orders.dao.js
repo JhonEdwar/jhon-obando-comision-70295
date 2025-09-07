@@ -23,7 +23,7 @@ export default class OrdersDao{
 
     getByIdBuyer = async (idBuyer) => {
         try {
-            const result = await ordersModel.findOne({ buyer: idBuyer })
+            const result = await ordersModel.find({ buyer: idBuyer })
             return result
         } catch (error) {
             console.log(error)

@@ -6,7 +6,7 @@ import { getCarts, getCartbyIdBuyer, addProductToCart, deleteCart,createCart } f
 const router = Router()
 
 router.get('/',passportCall('jwt'),authorization(["admin"]), getCarts)
-router.get('/myCart',passportCall('jwt'),authorization(["buyer"]), getCartbyIdBuyer)
+router.get('/carts',passportCall('jwt'),authorization(["buyer"]), getCartbyIdBuyer)
 router.post('/',passportCall('jwt'),authorization(["buyer"]), createCart)
 router.post('/:idCart/products',passportCall('jwt'),authorization(["buyer"]), addProductToCart)
 router.delete('/:idCart',passportCall('jwt'),authorization(["buyer"]), deleteCart)
