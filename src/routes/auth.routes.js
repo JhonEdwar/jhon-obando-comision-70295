@@ -8,6 +8,7 @@ const router= Router()
 router.post('/register',passportCall('register'),register)
 router.post('/login',passportCall("login"),login)
 router.get('/logout', logout)
+router.post('/passwordReset',passwordReset)
 
 
 router.get('/current',passportCall('jwt'),(req,res)=>{

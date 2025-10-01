@@ -11,9 +11,9 @@ import {
 export const getCarts = async (req, res) => {
     try {
         const result = await getCartsService()
-        res.status(200).json(result);
+        res.sendSuccess(result);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
@@ -21,9 +21,9 @@ export const getCartbyIdBuyer = async (req, res) => {
     const {_id}= req.user
     try {
         const result = await getCartByIdService(_id)
-        res.status(200).json(result);
+        res.sendSuccess(result);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
@@ -33,9 +33,9 @@ export const createCart = async (req, res) => {
 
     try {
         const newCart = await createCartService({ userId, products });
-        res.status(201).json({ message: "Cart created successfully", newCart });
+        res.sendSuccess({ message: "Cart created successfully", newCart });
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
@@ -46,9 +46,9 @@ export const addProductToCart = async (req, res) => {
 
     try {
         const updatedCart = await updateCartService(cartId, { productId, quantity });
-        res.status(200).json({message: "Product added to cart successfully", updatedCart});
+        res.sendSuccess({ message: "Product added to cart successfully", updatedCart });
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
@@ -56,8 +56,8 @@ export const deleteCart = async (req, res) => {
     const { id } = req.params;
     try {
         await deleteCartService(id);
-         res.status(200).json({message: "Cart deleted successfully"});
+         res.sendSuccess({ message: "Cart deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }

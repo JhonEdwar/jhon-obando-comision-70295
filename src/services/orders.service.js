@@ -2,6 +2,7 @@ import OrdersDao from "../daos/orders.dao.js"
 import {getBuyerByIdService,addOrderToBuyerService }  from "../services/buyer.service.js"
 import {getBusinessByIdService} from "../services/business.service.js"
 import {getProductByIdService} from "./product.service.js"
+import { sendSms } from "../utils/twilioSms.js"
 
 
 const ordersDao = new OrdersDao()
@@ -92,6 +93,8 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
         const orderResult = await ordersDao.create(order)
 
         await addOrderToBuyerService(idBuyer, orderResult.id)
+
+        // await sendSms(resultBuyer.phone, `tu orden ${orderResult.id} ha sido creada con valor: $${total}`)
 
 
         return orderResult

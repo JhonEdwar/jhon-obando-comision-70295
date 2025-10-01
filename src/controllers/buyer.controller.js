@@ -4,9 +4,9 @@ import {getBuyersService, getBuyerByIdService, updateBuyerService} from "../serv
 export const getBuyers = async (req, res) => {
     try {
         const result = await getBuyersService()
-        res.status(200).json(result);
+        res.sendSuccess(result);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
@@ -14,9 +14,9 @@ export const getBuyerById = async (req, res) => {
     const { id } = req.params
     try {
         const result = await getBuyerByIdService(id)
-        res.status(200).json(result);
+        res.sendSuccess(result);
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+        res.sendServerError(error);
     }
 }
 
@@ -26,10 +26,10 @@ export const updateBuyer = async (req, res) => {
     const updateBuyer = req.body
     try {
         const response = await updateBuyerService(id, updateBuyer)
-        res.status(200).json({ message: "Buyer updated successfully", response });
+        res.sendSuccess({ message: "Buyer updated successfully", response });
 
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        res.sendServerError(error);
     }
 }
 
