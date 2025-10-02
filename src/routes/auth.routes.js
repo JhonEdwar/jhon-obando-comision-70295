@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authorization } from "../middlewares/authorization.js";
 import { passportCall } from "../utils/passportCall.js";
-import {login, register,logout} from "../controllers/auth.controller.js"
+import {login, register,logout,passwordReset,resetCurrentPassword} from "../controllers/auth.controller.js"
 
 const router= Router()
 
@@ -9,6 +9,7 @@ router.post('/register',passportCall('register'),register)
 router.post('/login',passportCall("login"),login)
 router.get('/logout', logout)
 router.post('/passwordReset',passwordReset)
+router.post('/reset',resetCurrentPassword)
 
 
 router.get('/current',passportCall('jwt'),(req,res)=>{

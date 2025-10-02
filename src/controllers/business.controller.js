@@ -1,22 +1,22 @@
 import {getBusinessService, getBusinessByIdService,updateBusinessService } from "../services/business.service.js"
 import { createProductService } from "../services/product.service.js"
 import AppError from "../utils/appError.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 
-export const getBusiness = async (req, res) => {
-        const result = await getBusinessService()
-         if (!result) throw new AppError(404, "No business found");   
-        res.sendSuccess(result);
-}
+export const getBusiness = asyncHandler(async (req, res) => {
+    const result = await getBusinessService()
+     if (!result) throw new AppError(404, "No business found");   
+    res.sendSuccess(result);
+});
 
-export const getBusinessById = async (req, res) => {
+export const getBusinessById = asyncHandler(async (req, res) => {
     const { id } = req.params
     const result = await getBusinessByIdService(id)
     if (!result) throw new AppError(404, "No business found");
     res.sendSuccess(result);
+});
 
-}
-
-export const updateBusiness = async (req, res) => {
+export const updateBusiness = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
         const updatedBusiness = await updateBusinessService(id, updateData);
@@ -24,10 +24,10 @@ export const updateBusiness = async (req, res) => {
             throw new AppError(404, "Business not found");
         }
         res.sendSuccess({ message: "Business updated successfully", updatedBusiness });
-}
+});
 
 
-export const addProduct = async (req, res) => {
+export const addProduct = asyncHandler(async (req, res) => {
     const { id } = req.params
     const product = req.body
         if (!product.title || !product.price || !product.stock) {
@@ -45,4 +45,4 @@ export const addProduct = async (req, res) => {
 
         res.sendSuccess({ message: "Product added successfully", newProduct });
 
-}
+} );

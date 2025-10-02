@@ -6,35 +6,36 @@ import {getOrdersService,
     ordersResolveService
 } from '../services/orders.service.js'
 import AppError from "../utils/appError.js"
+import { asyncHandler } from "../utils/asyncHandler.js"
 
 
-export const getOrders = async (req, res) => {
-        const result = await getOrdersService()
-        res.sendSuccess(result);
-}
+export const getOrders = asyncHandler(async (req, res) => {
+    const result = await getOrdersService()
+    res.sendSuccess(result);
+});
 
 
-export const getOrdersById = async (req, res) => {
+export const getOrdersById = asyncHandler(async (req, res) => {
     const { id } = req.params
         const result = await getOrdersByIdService(id)
         res.sendSuccess(result);
-}
+});
 
-export const getOrdersByIdBuyer = async (req, res) => {
+export const getOrdersByIdBuyer = asyncHandler(async (req, res) => {
     const { idBuyer } = req.params
         const result = await getOrdersByIdBuyerSer(idBuyer)
         res.sendSuccess(result);
-}
+});
 
 
-export const getOrdersByIdBusiness = async (req, res) => {
+export const getOrdersByIdBusiness = asyncHandler(async (req, res) => {
     const {idBusiness}=req.params
     const result = await getOrdersByIdBusinessSer(idBusiness)
     res.sendSuccess(result);
-}
+});
 
 
-export const orderCreate = async (req, res) => {
+export const orderCreate = asyncHandler(async (req, res) => {
     const { idBuyer, idBusiness, products} = req.body
         if (!idBuyer || !idBusiness || !products || !Array.isArray(products) || products.length === 0) {
             throw new AppError(400, "Missing or invalid required fields");
@@ -46,10 +47,9 @@ export const orderCreate = async (req, res) => {
         }
 
         res.sendSuccess({ message: "Order create successfully", order: orderResult });
+});
 
-}
-
-export const ordersResolve = async (req, res) => {
+export const ordersResolve = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { resolve } = req.body
 
@@ -65,5 +65,5 @@ export const ordersResolve = async (req, res) => {
         }
         res.sendSuccess({ message: "Edit status create successfully", status: statusOrder });
 
-}
+} );
 
