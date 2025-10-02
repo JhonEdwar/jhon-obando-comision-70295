@@ -1,4 +1,5 @@
 import businessModel from "../models/business.model.js"
+import AppError from "../utils/appError.js"
 
 export default class BusinessDao {
 
@@ -10,13 +11,11 @@ export default class BusinessDao {
 
         try {
 
-            const result = await businessModel.find()
+            const result = await businessModel.find()   
             return result
 
         } catch (error) {
-
-            console.log(error)
-            return { error: "Failed to fetch businesses" }
+            throw new AppError(500, `Failed to fetch businesses: ${error.message}`)
 
         }
     }
@@ -26,12 +25,14 @@ export default class BusinessDao {
         try {
 
             const result = await businessModel.findOne({ _id: id })
+            if (!result) {
+                throw new AppError(404, "Business not found")
+            }
             return result
 
-        } catch (error) {
-
-            console.log(error)
-            return { error: "Failed to fetch business by ID" }
+        } catch (error) {   
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to fetch business by ID: ${error.message}`)
 
         }
     }
@@ -41,23 +42,29 @@ export default class BusinessDao {
         try {
 
             const result = await businessModel.findOne({ email })
+            if (!result) {
+                throw new AppError(404, "Business not found")
+            }
             return result
 
         } catch (error) {
+            if (error instanceof AppError) throw error;
 
-            console.log(error)
-            return { error: "Failed to fetch business by email" }
+            throw new AppError(500, `Failed to fetch business by email: ${error.message}`)
 
         }
     }
 
     update = async (id, updateData) => {
         try {
-            const result = await businessModel.findByIdAndUpdate(id, updateData);
+            const result = await businessModel.findByIdAndUpdate(id, updateData, { new: true });
+            if (!result) {
+                throw new AppError(404, "Business not found");
+            }
             return result;
         } catch (error) {
-            console.log(error);
-            return { error: "Failed to update business" };
+           if (error instanceof AppError) throw error;
+           throw new AppError(500, `Failed to update business: ${error.message}`);
         }
     }
 
@@ -68,11 +75,13 @@ export default class BusinessDao {
             return result
 
         } catch (error) {
+            if (error.code === 11000) {
+                throw new AppError(409, "Business already exists with this email");
+                }
 
-            console.log(error)
-            return { error: "Failed to save business" }
+            throw new AppError(500, `Failed to save business: ${error.message}`);
 
         }
     }
 
-}
+}   

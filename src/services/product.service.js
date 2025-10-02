@@ -1,4 +1,5 @@
 import { ProductDao } from "../daos/product.dao.js"
+import AppError from "../utils/appError.js"
 
 const productDao = new ProductDao()
 
@@ -7,7 +8,8 @@ export const getProductService = async () => {
         const products = await productDao.getProduct()
         return products
     } catch (error) {
-        throw new Error('Error getting products: ' + error.message)
+        console.error("Error in updateCartService:", error);
+        throw error
     }
 }
 
@@ -16,7 +18,8 @@ export const getProductByIdService = async (id) => {
         const product = await productDao.getProductById(id)
         return product
     } catch (error) {
-        throw new Error('Error getting product by id: ' + error.message)
+        console.error("Error in getProductByIdService:", error);
+        throw error
     }
 }
 
@@ -25,7 +28,8 @@ export const createProductService = async (product) => {
         const newProduct= await productDao.createProduct(product)
         return newProduct
     } catch (error) {
-        throw new Error('Error creating product: ' + error.message)
+        console.error("Error in createProductService:", error);
+        throw error
     }
 }
 
@@ -34,7 +38,8 @@ export const updateProductService = async (id, updateProduct) => {
         const result = await productDao.updateProduct(id, updateProduct)
         return result
     } catch (error) {
-        throw new Error('Error updating product: ' + error.message)
+        console.error("Error in updateProductService:", error);
+        throw error
     }
 }
 
@@ -42,10 +47,11 @@ export const deleteProductService = async (id) => {
     try {
         const result= await productDao.deleteProduct(id)
         if (result.deletedCount === 0) {
-            throw new Error("Cart not found or already deleted");
+            throw new AppError(404, "Product not found or already deleted");
         }
         return result 
     } catch (error) {
-        throw new Error('Error deleting product: ' + error.message)
+        console.error("Error in deleteProductService:", error);
+        throw error
     }
 }

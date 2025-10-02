@@ -1,4 +1,5 @@
 import CartDao from '../daos/cart.dao.js';
+import AppError from "../utils/appError.js"
 
 const cartDao = new CartDao();
 
@@ -8,7 +9,7 @@ export const getCartsService = async () => {
         return carts;
     } catch (error) {
         console.error("Error in getCartsService:", error);
-        throw new Error("Failed to get carts");
+        throw error
     }
 }
 
@@ -18,7 +19,7 @@ export const getCartByIdService = async (idBuyer) => {
         return cart;
     } catch (error) {
         console.error("Error in getCartByIdService:", error);
-        throw new Error("Failed to get cart by id");
+        throw error
     }
 };
 
@@ -29,21 +30,27 @@ export const createCartService = async (data) => {
         createdAt: new Date()
     };
     try {
-        const newCart = await cartDao.create(cartData);
+        const newCart = await cartDao.create(cartData); 
+        if (!newCart) {
+            throw new AppError(404, "No cart found with the given ID");
+        }
         return newCart;
     } catch (error) {
         console.error("Error in createCartService:", error);
-        throw new Error("Failed to create cart");
+        throw error
     }
 };
 
 export const updateCartService = async (id, updateProducts) => {
     try {
         const updatedCart = await cartDao.updateCart(id, updateProducts);
+        if (!updatedCart) {
+            throw new AppError(404, "No cart found with the given ID");
+        }
         return updatedCart;
     } catch (error) {
         console.error("Error in updateCartService:", error);
-        throw new Error("Failed to update cart");
+        throw error
     }
 };
 
@@ -51,7 +58,7 @@ export const deleteCartService = async (id) => {
    
         const result = await cartDao.deleteCart(id)
         if (result.deletedCount === 0) {
-        throw new Error("Cart not found or already deleted");
+            throw new AppError(404, "No cart found with the given ID");
         }
         return result
 

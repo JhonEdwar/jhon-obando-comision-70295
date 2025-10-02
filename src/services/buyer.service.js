@@ -1,5 +1,6 @@
 import BuyerDao from "../daos/buyer.dao.js"
 import BuyerDTO from "../dtos/buyer.dto.js"
+import AppError from "../utils/appError.js"
 
 const buyerService = new BuyerDao()
 
@@ -13,8 +14,8 @@ export const getBuyersService = async () => {
         })
         return buyers
     } catch (error) {
-        console.error("Error in getBuyersService:", error)
-        throw new Error("Failed to get buyers")
+         if (error instanceof AppError) throw error
+         throw new AppError(500, `Failed to fetch buyers: ${error.message}`)
     }
 }
 
@@ -22,13 +23,13 @@ export const getBuyerByEmailService = async (email) => {
     try {
         const result = await buyerService.getByEmail(email)
         if (!result) {
-            throw new Error("Buyer not found")
+            throw new AppError(404, "No buyer found with the given email");
         }
         const buyer = new BuyerDTO(result)
         return buyer
     } catch (error) {
-        console.error("Error in getBuyerByEmailService:", error)
-        throw new Error("Failed to get buyer by email")
+         if (error instanceof AppError) throw error
+         throw new AppError(500, `Failed to fetch buyersByEmail: ${error.message}`)
     }
 }
 
@@ -39,7 +40,7 @@ export const getBuyerByIdService = async (id) => {
         return buyer
     } catch (error) {
         console.error("Error in getBuyerByIdService:", error)
-        throw new Error("Failed to get buyer by ID")
+        throw new AppError(500, `Failed to fetch buyer by ID: ${error.message}`)
     }
 }
 
@@ -47,12 +48,12 @@ export const addOrderToBuyerService = async (id, updateBuyer) => {
     try {
         const result = await buyerService.updateOrders(id, updateBuyer)
         if(!result) {
-            throw new Error("Buyer not found")
+            throw new AppError(404, "No buyer found with the given ID"); 
         }
         return result
     } catch (error) {
-        console.error("Error in updateBuyerService:", error)
-        throw new Error("Failed to update buyer")
+        console.error("Error in addOrderToBuyerService:", error)
+        throw error
     }
 }   
 
@@ -60,12 +61,12 @@ export const updateBuyerService = async (id, updateBuyer) => {
     try {
         const result = await buyerService.update(id, updateBuyer)
         if (!result) {
-            throw new Error("Buyer not found")
+            throw new AppError(404, "No buyer found with the given ID");
         }
         return result
     } catch (error) {
         console.error("Error in updateBuyerService:", error)
-        throw new Error("Failed to update buyer")
+        throw error
     }
 }
 

@@ -1,4 +1,5 @@
 import buyerModel from "../models/buyer.model.js";
+import AppError from "../utils/appError.js"
 
 export default class BuyerDao{
     constructor() {}
@@ -8,28 +9,33 @@ export default class BuyerDao{
             const buyers = await buyerModel.find()
             return buyers
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to fetch buyers" }
+            throw new AppError(500, `Failed to fetch buyers: ${error.message}`)
         }
     }
 
     getById = async (id) => {
         try {
-            const buyer = await buyerModel.findOne({ _id: id })
+            const buyer = await buyerModel.findOne({ _id: id }) 
+            if (!buyer) {
+                throw new AppError(404, "Buyer not found")
+            }
             return buyer
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to fetch buyer by ID" }
+            if (error instanceof AppError) throw error
+            throw new AppError(500, `Failed to fetch buyer by ID: ${error.message}`)
         }
     }
     
     getByEmail = async (email) => {
         try {
             const buyer = await buyerModel.findOne({ email })
+            if (!buyer) {
+                throw new AppError(404, "Buyer not found")
+            }
             return buyer
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to fetch buyer by email" }
+            if (error instanceof AppError) throw error
+            throw new AppError(500, `Failed to fetch buyer by email: ${error.message}`)
         }
     }
 
@@ -37,22 +43,25 @@ export default class BuyerDao{
         try {
             const result = await buyerModel.updateOne({ _id: id },{$push: { orders: updateBuyer }})
             if (result.modifiedCount === 0) {
-                return { error: "No buyer found with the given ID" }
+                throw new AppError(404, "No buyer found with the given ID");
             }
+            return result
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to update buyer" }
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to update buyer orders: ${error.message}`)
         }
     }
+
     update = async (id, updateBuyer) => {
         try {
-            const result = await buyerModel.updateOne({ _id: id },updateBuyer)
+            const result = await buyerModel.updateOne({ _id: id }, updateBuyer)
             if (result.modifiedCount === 0) {
-                return { error: "No buyer found with the given ID" }
+                throw new AppError(404, "No buyer found with the given ID")
             }
+            return result
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to update buyer" }
+            if (error instanceof AppError) throw error;
+           throw new AppError(500, `Failed to update buyer: ${error.message}`)
         }
     }
 
@@ -61,8 +70,10 @@ export default class BuyerDao{
             const result = await buyerModel.create(buyer)
             return result
         } catch (error) {
-            console.log(error)
-            return { error: "Failed to save buyer" }
+            if (error.code === 11000) {
+                throw new AppError(409, "Buyer already exists with this email");
+                }
+            throw new AppError(500, `Failed to save buyer: ${error.message}`);
         }
     }
 }

@@ -1,4 +1,5 @@
 import productModel from "../models/product.model.js"
+import AppError from "../utils/appError.js"
 
 export class ProductDao {
     constructor() {}
@@ -7,16 +8,20 @@ export class ProductDao {
             const products = await productModel.find();
             return products;
         } catch (error) {
-            return { error: error.message };
+            throw new AppError(500, `Failed to fetch products: ${error.message}`);
         }
     }
 
     async getProductById(id) {
         try {
             const product = await productModel.findById(id);
+            if (!product) {
+                throw new AppError(404, "Product not found");
+            }
             return product;
         } catch (error) {
-            return { error: error.message };
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to fetch product by ID: ${error.message}`);
         }
     }
 
@@ -25,25 +30,36 @@ export class ProductDao {
             const newProduct = await productModel.create(product);
             return newProduct;
         } catch (error) {
-            return { error: error.message };
+            if (error.code === 11000) {
+                  throw new AppError(409, "Product already exists with this ID");
+            }
+            throw new AppError(500, `Failed to create product: ${error.message}`);
         }
     }
 
     async updateProduct(id, updateProduct) {
         try {
             const result = await productModel.updateOne({ _id: id }, updateProduct);
+            if (result.modifiedCount === 0) {
+                throw new AppError(404, "No product found with the given ID");
+            }
             return result;
         } catch (error) {
-            return { error: error.message };
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to update product: ${error.message}`);
         }
     }
 
     async deleteProduct(id) {
         try {
             const result = await productModel.deleteOne({ _id: id });
+            if (result.deletedCount === 0) {
+                throw new AppError(404, "No product found with the given ID");
+            }
             return result;
         } catch (error) {
-            return { error: error.message };
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to delete product: ${error.message}`);
         }
     }
 }
