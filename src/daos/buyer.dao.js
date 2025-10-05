@@ -39,9 +39,9 @@ export default class BuyerDao{
         }
     }
 
-    updateOrders = async (id, updateBuyer) => {
+    updateOrders = async (id, updateBuyer,options = {}) => {
         try {
-            const result = await buyerModel.updateOne({ _id: id },{$push: { orders: updateBuyer }})
+            const result = await buyerModel.updateOne({ _id: id },{$push: { orders: updateBuyer }},options)
             if (result.modifiedCount === 0) {
                 throw new AppError(404, "No buyer found with the given ID");
             }

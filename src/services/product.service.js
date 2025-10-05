@@ -1,4 +1,4 @@
-import { ProductDao } from "../daos/product.dao.js"
+import  ProductDao  from "../daos/product.dao.js"
 import AppError from "../utils/appError.js"
 
 const productDao = new ProductDao()
@@ -20,6 +20,16 @@ export const getProductByIdService = async (id) => {
     } catch (error) {
         console.error("Error in getProductByIdService:", error);
         throw error
+    }
+}
+
+export const getProductsByIdsService = async (ids) => {
+    try {
+        const products = await productDao.getProductsByIds(ids);
+        return products;
+    } catch (error) {
+        console.error("Error in getProductsByIdsService:", error);
+        throw error;
     }
 }
 

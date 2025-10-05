@@ -1,7 +1,7 @@
 import productModel from "../models/product.model.js"
 import AppError from "../utils/appError.js"
 
-export class ProductDao {
+export default class ProductDao {
     constructor() {}
     async getProduct() {
         try {
@@ -25,6 +25,16 @@ export class ProductDao {
         }
     }
 
+    async getProductsByIds(ids) {
+        try {
+            const products = await productModel.find({ _id: { $in: ids } });
+            return products;
+        } catch (error) {
+            if (error instanceof AppError) throw error;
+            throw new AppError(500, `Failed to fetch products: ${error.message}`);
+        }
+    }
+
     async createProduct(product) {
         try {
             const newProduct = await productModel.create(product);
@@ -37,9 +47,9 @@ export class ProductDao {
         }
     }
 
-    async updateProduct(id, updateProduct) {
+    async updateProduct(id, updateProduct ,options = {}) {
         try {
-            const result = await productModel.updateOne({ _id: id }, updateProduct);
+            const result = await productModel.updateOne({ _id: id }, updateProduct, options);
             if (result.modifiedCount === 0) {
                 throw new AppError(404, "No product found with the given ID");
             }

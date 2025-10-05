@@ -44,9 +44,9 @@ export const getBuyerByIdService = async (id) => {
     }
 }
 
-export const addOrderToBuyerService = async (id, updateBuyer) => {
+export const addOrderToBuyerService = async (id, updateBuyer, options = {}) => {
     try {
-        const result = await buyerService.updateOrders(id, updateBuyer)
+        const result = await buyerService.updateOrders(id, updateBuyer, options)
         if(!result) {
             throw new AppError(404, "No buyer found with the given ID"); 
         }

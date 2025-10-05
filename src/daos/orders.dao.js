@@ -51,10 +51,11 @@ export default class OrdersDao{
         }
     }
 
-    create = async (order) => {
+    create = async (order,options = {}) => {
         try {
-            const result = await ordersModel.create(order)
-            return result
+            const result = await ordersModel.create([order], options)
+            return result[0]
+
         } catch (error) {
             if (error.code === 11000) {
                   throw new AppError(409, "Order already exists with this ID")
@@ -77,4 +78,4 @@ export default class OrdersDao{
     }
 
 
-}
+}s
