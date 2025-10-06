@@ -80,6 +80,7 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
 
         const productIds = products.map(p => p._id);
         const currentProducts = await getProductsByIdsService(productIds);
+        const productMap = new Map(currentProducts.map(p => [p._id.toString(), p]));
 
         
 
@@ -147,7 +148,7 @@ export const orderCreateService= async (idBuyer, idBusiness, products) => {
             await session.abortTransaction();
             throw error;
         } finally {
-            session.endSession();
+            await session.endSession();
         }
 
 

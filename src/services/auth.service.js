@@ -3,7 +3,7 @@ import AdminDao  from "../daos/admin.dao.js"
 import BuyerDao from "../daos/buyer.dao.js"
 import businessDao from "../daos/business.dao.js"
 import { createHash, isValidPassword } from "../utils/hashingUtils.js"
-
+import AppError from "../utils/appError.js"
 
 const buyerService = new BuyerDao()
 const businessService = new businessDao()
@@ -88,4 +88,24 @@ export const loginUser=async (req,username,password,done) => {
     }
 }
 
+
+export const findUserByEmail = async (email) => {
+    try {
+        // Intentar en buyer
+        let user = await buyerService.getByEmail(email).catch(() => null)
+        if (user) return { user, role: 'buyer' }
+
+        // Intentar en business
+        user = await businessService.getByEmail(email).catch(() => null)
+        if (user) return { user, role: 'business' }
+
+        // Intentar en admin
+        user = await adminService.getByEmail(email).catch(() => null)
+        if (user) return { user, role: 'admin' }
+
+        return null
+    } catch (error) {
+        throw new AppError(500, `Error searching user: ${error.message}`)
+    }
+}
 

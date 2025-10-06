@@ -31,5 +31,19 @@ export default class AdminDao{
         }
     }
 
+    update = async (id, updateData) => {
+        try {
+            const result = await userModel.updateOne({ _id: id }, updateData)
+            if (result.modifiedCount === 0) {
+                throw new AppError(404, "No admin found with the given ID")
+            }
+            return result
+        } catch (error) {
+            if (error instanceof AppError) throw error
+            throw new AppError(500, `Failed to update admin: ${error.message}`)
+        }
+    }
+
+
 
 }

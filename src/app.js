@@ -13,6 +13,8 @@ import cartRoutes from './routes/cart.routes.js'
 import cors from 'cors'
 import { generateCustomResponse } from './utils/generateCustomResponses.js'
 import { errorHandler } from './middlewares/errorHandler.js'
+import { generalLimiter} from './config/rateLimiter.js'
+import logger from './config/logger.js'
 
 dotenv.config()
 
@@ -25,9 +27,13 @@ app.use(cors({
     credentials: true,
     methods: ['GET','POST','PUT','DELETE']
 }))
+app.use((req, res, next) => {
+    logger.http(`${req.method} ${req.url}`)
+    next()
+})
+
+app.use(generalLimiter);
 app.use('/public', express.static('public'))
-
-
 app.use(cookieParser())
 app.use(generateCustomResponse)
 initializePassport()
@@ -39,5 +45,13 @@ app.use('/api/buyer',buyerRoutes)
 app.use('/api/cart/',cartRoutes)
 app.use('/api/order',orderRoutes)
 app.use(errorHandler)
-mongoose.connect(process.env.MONGO)
-app.listen(process.env.PORT, ()=> console.log('Servidor levantado en el puerto: ' + process.env.PORT ))
+
+mongoose.connect(process.env.MONGO) 
+.then(() => logger.info('✓ MongoDB connected successfully'))
+.catch((error) => logger.error('✗ Error connecting to MongoDB', { error: error.message }))
+
+
+app.listen(process.env.PORT, () => {
+    logger.info(`🚀 Server running on port ${process.env.PORT}`)
+    logger.info(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`)
+})

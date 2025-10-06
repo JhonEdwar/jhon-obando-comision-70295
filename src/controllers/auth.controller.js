@@ -1,9 +1,7 @@
-import { generateToken } from "../utils/generateToken.js"
-import passwordResetModel from "../models/passwordReset.model.js"
-import { v4 as uuidv4 } from 'uuid';
-import { sendPasswordResetEmail } from "../utils/sendPasswordResetEmail.js";    
+import { generateToken } from "../utils/generateToken.js"     
 import AppError from "../utils/appError.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
+import { updateUserPassword, createAndSendPasswordReset, getMailByToken } from "../services/passwordReset.service.js" 
 
 export const register=asyncHandler(async(req,res)=>{
     if(!req.user) return res.status(400).json({message:"error en registro"})
@@ -25,23 +23,11 @@ export const logout=asyncHandler(async(req,res)=>{
 export const passwordReset= asyncHandler(async (req,res)=>{
         const { email } = req.body;
 
-       const user = await User.findOne({ email });
-       if (!user) {
-           return res.status(404).json({ message: "User not found" });
-       }
-
-       const token = uuidv4();
-    try {
-        await passwordResetModel.create({ email, token });
-    } catch (error) {
-        throw new AppError(500, `Failed to create password reset: ${error.message}`);
-    }
-
-    try {
-        await sendPasswordResetEmail({ email, token });
-    } catch (error) {
-       throw new AppError(500, `Failed to send password reset email: ${error.message}`);
-    }
+        if (!email) {
+            throw new AppError(400, "Email is required")
+        }
+    
+        await createAndSendPasswordReset(email)
 
        res.sendSuccess({ message: "Password reset email sent" });
 });
@@ -54,17 +40,9 @@ export const resetCurrentPassword= asyncHandler(async (req,res)=>{
         if (!password || !email || !token) {
          throw new AppError(400, "Missing required fields");
     }
-
-    const passwordHash = createHash(password); 
-
-       const passwordReset = await passwordResetModel.findOne({ token });
-       if (!passwordReset) {
-           throw new AppError(400, "Invalid or expired token");
-       }
-
+       const emailByToken = await getMailByToken(token)
        try {
-           await User.updateOne({ email: passwordReset.email }, { password: passwordHash });
-           await passwordResetModel.deleteOne({ token });
+        await updateUserPassword(emailByToken, password)
            res.sendSuccess({ message: "Password updated successfully" });
        } catch (error) {
            throw new AppError(500, `Failed to reset password: ${error.message}`);

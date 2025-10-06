@@ -3,7 +3,7 @@ import  __dirname  from '../config/dirname.js'
 
 
 
-export const sendConfirmationEmail = async ({ email, token }) => {
+export const sendPasswordResetEmail  = async ({ email, token }) => {
     const transport = nodemailer.createTransport({
     service: 'gmail',
     port: 587,
