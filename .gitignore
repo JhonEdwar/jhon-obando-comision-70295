@@ -1,5 +1,6 @@
-.env.development
-.env.production
+.env
+.env.dev
+.env.prod
 /node_modules
 .zip
 logs/

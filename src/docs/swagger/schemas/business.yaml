@@ -1,0 +1,30 @@
+components:
+  schemas:
+    Business:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        name:
+          type: string
+          example: "TechStore Solutions"
+        email:
+          type: string
+          format: email
+          example: "contacto@techstore.com"
+        phone:
+          type: string
+          example: "+1234567890"
+        address:
+          type: string
+          example: "123 Main St, City"
+        description:
+          type: string
+          example: "Tienda especializada en tecnología"
+        owner:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        createdAt:
+          type: string
+          format: date-time

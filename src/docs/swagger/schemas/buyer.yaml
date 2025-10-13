@@ -1,0 +1,39 @@
+components:
+  schemas:
+    Buyer:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        firstName:
+          type: string
+          example: "Juan"
+        lastName:
+          type: string
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan@example.com"
+        phone:
+          type: string
+          example: "+1234567890"
+        address:
+          type: string
+          example: "456 Oak Ave, City"
+        createdAt:
+          type: string
+          format: date-time
+    
+    BuyerUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string

@@ -1,0 +1,81 @@
+components:
+  schemas:
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operación completada exitosamente"
+        data:
+          type: object
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Error en la operación"
+        status:
+          type: integer
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+  
+  responses:
+    UnauthorizedError:
+      description: Token de acceso faltante o inválido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Token de acceso requerido"
+            status: 401
+            timestamp: "2023-01-01T00:00:00.000Z"
+    
+    ForbiddenError:
+      description: Acceso denegado - permisos insuficientes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Acceso denegado"
+            status: 403
+            timestamp: "2023-01-01T00:00:00.000Z"
+    
+    NotFoundError:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Recurso no encontrado"
+            status: 404
+            timestamp: "2023-01-01T00:00:00.000Z"
+    
+    ValidationError:
+      description: Error de validación de datos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Datos de entrada inválidos"
+            status: 400
+            timestamp: "2023-01-01T00:00:00.000Z"
+  
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token

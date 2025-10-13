@@ -1,5 +1,4 @@
 import express from 'express'
-import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import initializePassport from './config/passport.config.js'
@@ -15,15 +14,15 @@ import { generateCustomResponse } from './utils/generateCustomResponses.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { generalLimiter} from './config/rateLimiter.js'
 import logger from './config/logger.js'
+import { config } from './config/config.js'
+import { swaggerUi, specs, swaggerOptions } from './docs/swagger/swagger.js'
 
-dotenv.config()
 
 const app = express()
-
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: config.FRONTEND_URL,
     credentials: true,
     methods: ['GET','POST','PUT','DELETE']
 }))
@@ -38,6 +37,9 @@ app.use(cookieParser())
 app.use(generateCustomResponse)
 initializePassport()
 app.use(passport.initialize())
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerOptions))
 app.use('/api/users',usersRoutes)
 app.use('/api/products',productsRoutes)
 app.use('/api/business',businessRoutes)
@@ -52,6 +54,6 @@ mongoose.connect(process.env.MONGO)
 
 
 app.listen(process.env.PORT, () => {
-    logger.info(`🚀 Server running on port ${process.env.PORT}`)
-    logger.info(`📍 Ambiente: ${process.env.NODE_ENV || 'development'}`)
+    logger.info(`🚀 Server running on port ${config.PORT}`)
+    logger.info(`📍 Ambiente: ${config.NODE_ENV || 'development'}`)
 })

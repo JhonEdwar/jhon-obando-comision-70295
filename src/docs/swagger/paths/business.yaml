@@ -1,0 +1,81 @@
+paths:
+  /api/business:
+    get:
+      tags:
+        - Business
+      summary: Obtener todos los negocios
+      description: Retorna lista de negocios (solo buyers)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lista de negocios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Business'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /api/business/{id}:
+    get:
+      tags:
+        - Business
+      summary: Obtener negocio por ID
+      description: Retorna un negocio específico (solo buyers)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del negocio
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Negocio encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /api/business/{id}/product:
+    post:
+      tags:
+        - Business
+      summary: Agregar producto a negocio
+      description: Agrega un producto al catálogo del negocio
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del negocio
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+      responses:
+        '201':
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'

@@ -1,0 +1,82 @@
+paths:
+  /api/buyer:
+    get:
+      tags:
+        - Buyer
+      summary: Obtener todos los compradores
+      description: Retorna lista de compradores (solo business)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lista de compradores obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Buyer'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /api/buyer/{id}:
+    get:
+      tags:
+        - Buyer
+      summary: Obtener comprador por ID
+      description: Retorna un comprador específico (solo business)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del comprador
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comprador encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Buyer'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    patch:
+      tags:
+        - Buyer
+      summary: Actualizar comprador
+      description: Actualiza información del comprador (solo el propio usuario)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del comprador
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuyerUpdate'
+      responses:
+        '200':
+          description: Comprador actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Buyer'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'

@@ -1,0 +1,86 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        name:
+          type: string
+          example: "Smartphone Samsung Galaxy"
+        price:
+          type: number
+          format: float
+          example: 599.99
+        description:
+          type: string
+          example: "Smartphone con cámara de 108MP"
+        category:
+          type: string
+          example: "Electrónicos"
+        stock:
+          type: integer
+          example: 50
+        business:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        images:
+          type: array
+          items:
+            type: string
+          example: ["https://example.com/image1.jpg"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    ProductCreate:
+      type: object
+      required:
+        - name
+        - price
+        - description
+      properties:
+        name:
+          type: string
+          example: "Smartphone Samsung Galaxy"
+        price:
+          type: number
+          format: float
+          example: 599.99
+        description:
+          type: string
+          example: "Smartphone con cámara de 108MP"
+        category:
+          type: string
+          example: "Electrónicos"
+        stock:
+          type: integer
+          example: 50
+        images:
+          type: array
+          items:
+            type: string
+          example: ["https://example.com/image1.jpg"]
+    
+    ProductUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+        description:
+          type: string
+        category:
+          type: string
+        stock:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string

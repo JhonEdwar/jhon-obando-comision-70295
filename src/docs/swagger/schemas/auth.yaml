@@ -1,0 +1,89 @@
+components:
+  schemas:
+    UserRegister:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+        - role
+      properties:
+        firstName:
+          type: string
+          example: "Juan"
+        lastName:
+          type: string
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          example: "juan@example.com"
+        password:
+          type: string
+          minLength: 6
+          example: "password123"
+        role:
+          type: string
+          enum: [buyer, business, admin]
+          example: "buyer"
+        phone:
+          type: string
+          example: "+1234567890"
+    
+    UserLogin:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "juan@example.com"
+        password:
+          type: string
+          example: "password123"
+    
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Usuario autenticado exitosamente"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        user:
+          $ref: '#/components/schemas/CurrentUser'
+    
+    CurrentUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: "Juan"
+        lastName:
+          type: string
+          example: "Pérez"
+        role:
+          type: string
+          enum: [buyer, business, admin]
+          example: "buyer"
+    
+    PasswordReset:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          example: "reset_token_123"
+        newPassword:
+          type: string
+          minLength: 6
+          example: "newpassword123"

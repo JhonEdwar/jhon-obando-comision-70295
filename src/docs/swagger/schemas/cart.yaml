@@ -1,0 +1,29 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        buyer:
+          type: string
+          example: "60f7b3b3b3b3b3b3b3b3b3b3"
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                example: "60f7b3b3b3b3b3b3b3b3b3b3"
+              quantity:
+                type: integer
+                example: 2
+        total:
+          type: number
+          format: float
+          example: 1199.98
+        createdAt:
+          type: string
+          format: date-time

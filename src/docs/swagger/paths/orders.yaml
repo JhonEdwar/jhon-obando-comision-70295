@@ -1,0 +1,160 @@
+paths:
+  /api/order:
+    get:
+      tags:
+        - Orders
+      summary: Obtener todas las órdenes
+      description: Retorna todas las órdenes (solo admin)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lista de órdenes obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    post:
+      tags:
+        - Orders
+      summary: Crear orden
+      description: Crea una nueva orden desde el carrito (solo buyer)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+      responses:
+        '201':
+          description: Orden creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/order/{id}:
+    get:
+      tags:
+        - Orders
+      summary: Obtener orden por ID
+      description: Retorna una orden específica (buyer y business)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la orden
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Orden encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    post:
+      tags:
+        - Orders
+      summary: Resolver orden
+      description: Actualiza el estado de una orden (solo business)
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la orden
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderResolve'
+      responses:
+        '200':
+          description: Orden actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /api/order/buyer/{idBuyer}:
+    get:
+      tags:
+        - Orders
+      summary: Obtener órdenes por comprador
+      description: Retorna todas las órdenes de un comprador específico
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: idBuyer
+          in: path
+          required: true
+          description: ID del comprador
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Órdenes del comprador obtenidas exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+
+  /api/order/business/{idBusiness}:
+    get:
+      tags:
+        - Orders
+      summary: Obtener órdenes por negocio
+      description: Retorna todas las órdenes de un negocio específico
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: idBusiness
+          in: path
+          required: true
+          description: ID del negocio
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Órdenes del negocio obtenidas exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
