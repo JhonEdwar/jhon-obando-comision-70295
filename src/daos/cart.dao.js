@@ -52,7 +52,7 @@ export default class CartDao{
     updateCart = async (id, updateProducts) => {
         logger.info(`CartDao: Attempting to update cart with ID: ${id}`)
         try {
-            const result = await cartModel.updateOne({ _id: id }, { $set: { products: updateProducts } })
+            const result = await cartModel.updateOne({ _id: id }, { $push: { products: updateProducts } })
             if (result.modifiedCount === 0) {
                 logger.warn(`CartDao: No cart found with ID: ${id} for update`)
                 throw new AppError(404, "No cart found with the given ID")

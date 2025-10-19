@@ -1,7 +1,7 @@
 import { generateToken } from "../utils/generateToken.js"     
 import AppError from "../utils/appError.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { updateUserPassword, createAndSendPasswordReset, getMailByToken } from "../services/passwordReset.service.js"
+import { updateUserPassword, createAndSendPasswordReset, getEmailByToken } from "../services/passwordReset.service.js"
 import logger from "../config/logger.js" 
 
 export const register=asyncHandler(async(req,res)=>{
@@ -48,15 +48,15 @@ export const passwordReset= asyncHandler(async (req,res)=>{
 
 
 export const resetCurrentPassword= asyncHandler(async (req,res)=>{
-    const { email, token } = req.query;
-    const { password } = req.body;
+    const { email } = req.query;
+    const { password, token} = req.body;
     logger.info(`AuthController: Password reset attempt for email: ${email}`)
 
     if (!password || !email || !token) {
         logger.warn('AuthController: Password reset failed - missing required fields')
         throw new AppError(400, "Missing required fields");
     }
-    const emailByToken = await getMailByToken(token)
+    const emailByToken = await getEmailByToken(token)
     try {
         await updateUserPassword(emailByToken, password)
         logger.info(`AuthController: Password successfully updated for email: ${email}`)

@@ -4,9 +4,7 @@ import logger from "../config/logger.js"
 
 export default class ResetPasswordDao {
 
-    constructor() {
-
-    }
+    constructor() {}
 
     createPaswordReset = async (email, token) => {
         logger.info(`ResetPasswordDao: Attempting to create password reset for email: ${email}`)

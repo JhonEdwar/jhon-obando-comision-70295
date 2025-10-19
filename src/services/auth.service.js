@@ -1,13 +1,13 @@
 
 import AdminDao  from "../daos/admin.dao.js"
 import BuyerDao from "../daos/buyer.dao.js"
-import businessDao from "../daos/business.dao.js"
+import BusinessDao from "../daos/business.dao.js"
 import { createHash, isValidPassword } from "../utils/hashingUtils.js"
 import AppError from "../utils/appError.js"
 import logger from "../config/logger.js"
 
 const buyerService = new BuyerDao()
-const businessService = new businessDao()
+const businessService = new BusinessDao()
 const adminService= new AdminDao()
 
 export const createUser=async(req,username,password,done)=>{
